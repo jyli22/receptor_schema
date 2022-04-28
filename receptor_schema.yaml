@@ -1,0 +1,193 @@
+# The Receptor object hold information about a receptor and its reactivity.
+#
+Receptor:
+    discriminator: AIRR
+    type: object
+    required:
+        - receptor_hash
+        - receptor_type
+        - receptor_variable_domain_1_aa
+        - receptor_variable_domain_1_locus
+        - receptor_variable_domain_2_aa
+        - receptor_variable_domain_2_locus
+    properties:
+        receptor_hash:
+            type: string
+            description: >
+                The SHA256 hash of the receptor amino acid sequence, calculated as
+                sha256(concat(receptor_variable_domain_1_aa,receptor_variable_domain_2_aa) and represented as base16-encoded string.
+            title: Receptor hash ID
+            example: aa1c4b77a6f4927611ab39f5267415beaa0ba07a952c233d803b07e52261f026
+            x-airr:
+                nullable: false
+                adc-query-support: true
+        receptor_type:
+            type: string
+            enum:
+                - Ig
+                - TCR
+            description: The top-level receptor type, either Immunoglobulin (Ig) or T Cell Receptor (TCR).
+            x-airr:
+                nullable: false
+                adc-api-optional: true
+        receptor_variable_domain_1_aa:
+            type: string
+            description: >
+                Complete amino acid sequence of the mature variable domain of the Ig heavy, TCR beta or TCR delta chain.
+                The mature variable domain is defined as encompassing all AA from and including first AA after the the
+                signal peptide to and including the last AA that is completely encoded by the J gene.
+            example: >
+                QVQLQQPGAELVKPGASVKLSCKASGYTFTSYWMHWVKQRPGRGLEWIGRIDPNSGGTKYNEKFKSKATLTVDKPSSTAYMQLSSLTSEDSAVYYCARYDYYGSSYFDYWGQGTTLTVSS
+            x-airr:
+                nullable: false
+                adc-api-optional: true
+        receptor_variable_domain_1_locus:
+            type: string
+            enum:
+                - IGH
+                - TRB
+                - TRD
+            description: Locus from which the variable domain in receptor_variable_domain_1_aa originates
+            example: IGH
+            x-airr:
+                nullable: false
+                adc-api-optional: true
+        receptor_variable_domain_2_aa:
+            type: string
+            description: >
+                Complete amino acid sequence of the mature variable domain of the Ig light, TCR alpha or TCR gamma chain.
+                The mature variable domain is defined as encompassing all AA from and including first AA after the the
+                signal peptide to and including the last AA that is completely encoded by the J gene.
+            example: >
+                QAVVTQESALTTSPGETVTLTCRSSTGAVTTSNYANWVQEKPDHLFTGLIGGTNNRAPGVPARFSGSLIGDKAALTITGAQTEDEAIYFCALWYSNHWVFGGGTKLTVL
+            x-airr:
+                nullable: false
+                adc-api-optional: true
+        receptor_variable_domain_2_locus:
+            type: string
+            enum:
+                - IGK
+                - IGL
+                - TRA
+                - TRG
+            description: Locus from which the variable domain in receptor_variable_domain_2_aa originates
+            example: IGL
+            x-airr:
+                nullable: false
+                adc-api-optional: true
+        reactivity_measurements:
+            type: array
+            description: Records of reactivity measurement
+            items:
+                type: object
+                properties:
+                    ligand_type:
+                        type: string
+                        enum:
+                            - MHC:peptide
+                            - MHC:non-peptide
+                            - peptide
+                            - non-peptide
+                        description: Classification of ligand binding to receptor
+                        example: non-peptide
+                        x-airr:
+                            nullable: false
+                    mhc_class:
+                        type: string
+                        enum:
+                            - MHC-I
+                            - MHC-II
+                            - MHC-nonclassical
+                        description: (only for MHC:* ligand_type:) Classes MHC molecule
+                        example: MHC-II
+                        x-airr:
+                            nullable: true
+                    mhc_locus:
+                        type: string
+                        description: MHC molecules which the peptidic or non-peptidic antigen is bound into
+                        example: HLA-DR
+                        x-airr:
+                            nullable: true
+                    mhc_chain_1_name:
+                        type: string
+                        description: Allele name of an MHC alpha chain
+                        example: HLA-DRA
+                        x-airr:
+                            nullable: true
+                    mhc_chain_2_name:
+                        type: string
+                        description: Allele name of an MHC class II beta chain or an invariant beta2-microglobin chain
+                        example: HLA-DRB1*04:01
+                        x-airr:
+                            nullable: true
+                    antigen:
+                        type: string
+                        description: >
+                            The substance against which the receptor was tested. Any substance that stimulates an immune
+                            response in the body, such as through antibody production or by presentation to a TCR after
+                            binding to an MHC molecule.
+                        example: PSDKHIKEYLNKIQN
+                        x-airr:
+                            nullable: true
+                    antigen_type:
+                        type: string
+                        description: >
+                            Defining the structure of an antigen. There are non-peptidic structures bindng to antibody or
+                            major histocompatibility complex (MHC) to stimulate immune response.
+                        example: peptide
+                        x-airr:
+                            nullable: true
+                    antigen_curie:
+                        $ref: '#/Ontology'
+                        description: Identifiers for antigen reference source
+                        example: UNIPROT:P19597
+                        x-airr:
+                            nullable: true
+                    peptide_start:
+                        type: integer
+                        description: Start position of the peptide within the reference protein sequence
+                        x-airr:
+                            nullable: true
+                    peptide_end:
+                        type: integer
+                        description: End position of the peptide within the reference protein sequence        
+                        x-airr:
+                            nullable: true
+                    reactivity_study_method:
+                        type: string
+                        enum:
+                            - SPR
+                            - ITC
+                            - ELISA
+                            - cytometry
+                            - biological activity
+                        description: The methodology used to assess expression (assay implemented in experiment)
+                        x-airr:
+                            nullable: false
+                    reactivity_item:
+                        type: string
+                        enum:
+                            - IL-2 release
+                            - binding strength
+                            - dissociation constant KD
+                            - on rate
+                            - off rate
+                            - pf traversal inhibition
+                        description: The items calculated in measurement
+                        example: IL-2 release
+                        x-airr:
+                            nullable: false
+                    reactivity_value:
+                        type: float
+                        description: The absolute (processed) value of the measurement
+                        example: 162.26
+                        x-airr:
+                            nullable: false
+                    reactivity_unit:
+                        type: string
+                        description: The physical unit of the measurement
+                        example: pg/ml or M
+                        x-airr:
+                            nullable: false
+            x-airr:
+                nullable: true
