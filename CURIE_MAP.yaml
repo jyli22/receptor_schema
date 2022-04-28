@@ -40,6 +40,8 @@ InformationProvider:
   
    parameter:
         CHEBI:
+            Ontobee:
+                ontology_id: CHEBI
             OLS:
                 ontology_id: chebi
         
