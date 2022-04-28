@@ -1,0 +1,71 @@
+# Genotype of major histocompatibility complex (MHC) class I, class II and non-classical loci
+MHCGenotype:
+    discriminator:
+        propertyName: AIRR
+    type: object
+    required:
+        - mhc_genotype_id
+        - mhc_class
+        - mhc_alleles
+    properties:
+        mhc_genotype_id:
+            type: string
+            nullable: false
+            description: A unique identifier for this MHCGenotype, assumed to be unique in the context of the study
+        mhc_class:
+            type: string
+            nullable: false
+            description: Class of MHC alleles described by the MHCGenotype
+            enum:
+              - MHC-I
+              - MHC-II
+              - MHC-nonclassical
+            example: MHC-I
+            x-airr:
+                adc-query-support: true
+                format: controlled vocabulary
+        mhc_alleles:
+            type: array
+            nullable: false
+            description: List of MHC alleles of the indicated mhc_class identified in an individual
+            items:
+                type: object
+                properties:
+                    allele_designation:
+                        type: string
+                        nullable: false
+                        description: >
+                            The accepted designation of an allele, usually its gene symbol plus allele/sub-allele/etc
+                            identifiers, if provided by the mhc_typing method
+                    gene:
+                        $ref: '#/Ontology'
+                        nullable: true
+                        description: The MHC gene to which the described allele belongs
+                        title: MHC gene
+                        example:
+                            id: MRO:0000046
+                            label: HLA-A
+                        x-airr:
+                            adc-query-support: false
+                            format: ontology
+                            ontology:
+                                draft: true
+                                top_node:
+                                    id: MRO:0000004
+                                    label: MHC gene
+                    reference_set_ref:
+                        type: string
+                        nullable: false
+                        description: Repository and list from which it was taken (issuer/name/version)
+            x-airr:
+                adc-query-support: true
+        mhc_genotyping_method:
+            type: string
+            nullable: true
+            description: >
+                Information on how the genotype was determined. The content of this field should come from a list of
+                recommended terms provided in the AIRR Schema documentation.
+            title: MHC genotyping method
+            example: pcr_low_resolution
+            x-airr:
+                adc-query-support: true
