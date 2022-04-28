@@ -7,16 +7,13 @@ CURIEMap:
     map:
       OBO:
         iri_prefix: "http://purl.obolibrary.org/obo/CHEBI_"
-  
   UNIPROT:
-    type: catalog
+    type: identifier
     default:
-      map: UniProt
-      provider: UniProt
+      map: UNIPROT
     map:
       UniProt:
         iri_prefix: "http://purl.uniprot.org/uniprot/"
-
   MRO:
         type: ontology
         default:
@@ -32,7 +29,6 @@ InformationProvider:
       request:
         url: "https://www.ebi.ac.uk/ols/api/ontologies/{ontology_id}/terms?iri={iri}"
         response: application/json
-
     Ontobee:
             request:
                 url: "http://www.ontobee.org/ontology/{ontology_id}?iri={iri}"
@@ -43,8 +39,7 @@ InformationProvider:
             Ontobee:
                 ontology_id: CHEBI
             OLS:
-                ontology_id: chebi
-        
+                ontology_id: chebi      
         MRO:
             Ontobee:
                 ontology_id: MRO
